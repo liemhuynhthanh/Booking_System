@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: backend-spring
+  profiles:
+    active: dev
+
+# JWT config mặc định (có thể override ở từng profile)
+jwt:
+  expiredHours: 1
+  expiredDays: 14
+  # Base64 encoded secret key (256-bit minimum for HS256)
+  sercretKey: c87ccfbb2f25f91541d8e88768d209b13e5942115f05dffce4b777a12f335b23
+  refreshSecretKey: 72d01d97e6911409a8e6a29c6dc422fc6e249295bc34bc854713964c9e07da82

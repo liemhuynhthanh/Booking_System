@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  devtools:
+    add-properties: true
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true

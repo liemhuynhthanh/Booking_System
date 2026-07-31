@@ -1,0 +1,132 @@
+# ==========================================
+# Java / Maven
+# ==========================================
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Maven wrapper jar (chỉ commit file .properties, không commit jar)
+.mvn/wrapper/maven-wrapper.jar
+
+# ==========================================
+# Spring Boot
+# ==========================================
+spring-boot-*.log
+application-local.properties
+application-local.yml
+application-dev.properties
+application-dev.yml
+
+# ==========================================
+# Environment & Secrets (QUAN TRỌNG - không commit lên git)
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+secrets.yml
+secrets.properties
+
+# ==========================================
+# IDE - IntelliJ IDEA
+# ==========================================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# ==========================================
+# IDE - Eclipse / STS
+# ==========================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+
+# ==========================================
+# IDE - VS Code
+# ==========================================
+.vscode/
+
+# ==========================================
+# IDE - NetBeans
+# ==========================================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ==========================================
+# OS - Windows
+# ==========================================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ==========================================
+# OS - macOS
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ==========================================
+# OS - Linux
+# ==========================================
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==========================================
+# Docker
+# ==========================================
+docker-compose.override.yml
+
+# ==========================================
+# Logs
+# ==========================================
+logs/
+*.log
+*.log.*
+
+# ==========================================
+# Test & Coverage
+# ==========================================
+/test-output/
+/jacoco.exec
+/coverage/
+
+# ==========================================
+# Tài liệu sinh tự động
+# ==========================================
+HELP.md
