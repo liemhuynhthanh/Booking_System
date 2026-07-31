@@ -50,8 +50,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public String logout() {
-        return "logged out successfully";
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.logout(request));
     }
 
     @PostMapping("/refresh")

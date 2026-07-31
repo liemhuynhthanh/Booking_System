@@ -9,4 +9,5 @@ import javax.naming.NameNotFoundException;
 public interface AuthenticationService {
     TokenResponse authenticate(UserLoginRequest request);
     TokenResponse refresh(HttpServletRequest request);
+    String logout(HttpServletRequest request);
 }

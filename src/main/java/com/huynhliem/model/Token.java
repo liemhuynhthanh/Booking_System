@@ -14,14 +14,19 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "refresh_tokens")
-public class RefreshToken {
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(name = "username")
+    private String username;
 
+    @Column(name = "refresh_token")
     private String refreshToken;
+
+    @Column(name = "access_token")
+    private String accessToken;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -31,10 +36,5 @@ public class RefreshToken {
     @UpdateTimestamp
     private LocalDate updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_id",
-            nullable = false
-    )
-    private User user;
+
 }

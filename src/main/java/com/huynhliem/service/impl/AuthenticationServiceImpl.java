@@ -3,9 +3,11 @@ package com.huynhliem.service.impl;
 import com.huynhliem.dto.request.UserLoginRequest;
 import com.huynhliem.dto.response.TokenResponse;
 import com.huynhliem.exception.TokenExpiredException;
+import com.huynhliem.model.Token;
 import com.huynhliem.model.User;
 import com.huynhliem.repository.UserRepository;
 import com.huynhliem.service.AuthenticationService;
+import com.huynhliem.service.TokenService;
 import com.huynhliem.utils.JwtUtils;
 import com.huynhliem.utils.TokenType;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
+    private final TokenService tokenService;
     private final UserDetailService userDetailService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
@@ -51,6 +54,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String accessToken = jwtUtils.generateToken(userDetails);
         String refreshToken = jwtUtils.generateRefreshToken(userDetails);
 
+        tokenService.save(Token.builder()
+                .username(user.getName())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build());
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -91,5 +99,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .refreshToken(token)
                 .usedId(user.getId())
                 .build();
+    }
+
+    @Override
+    public String logout(HttpServletRequest request) {
+        final String token = request.getHeader("x-token");
+        if (StringUtils.isBlank(token)) {
+            throw new IllegalArgumentException("Token is missing");
+        }
+
+        final String username= jwtUtils.extractUsername(token, TokenType.ACCESS_TOKEN);
+    Token currentToken=tokenService.getByUserName(username);
+    tokenService.delete(currentToken);
+
+        return "Logged out successfully";
     }
 }
