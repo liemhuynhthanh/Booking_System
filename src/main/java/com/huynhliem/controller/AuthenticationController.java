@@ -1,5 +1,6 @@
 package com.huynhliem.controller;
 
+import com.huynhliem.dto.request.PasswordResetDTO;
 import com.huynhliem.dto.request.UserCreationRequest;
 import com.huynhliem.dto.request.UserLoginRequest;
 import com.huynhliem.dto.response.BaseResponse;
@@ -57,5 +58,17 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<TokenResponse> refreshToken(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.refresh(request));
+    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.forgotPassword(email));
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody String secretKey) {
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.resetPassword(secretKey));
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordResetDTO passwordResetDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.changePassword(passwordResetDTO));
     }
 }
