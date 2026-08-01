@@ -3,6 +3,7 @@ package com.huynhliem.service.impl;
 import com.huynhliem.dto.request.UserChangePasswordRequest;
 import com.huynhliem.dto.request.UserCreationRequest;
 import com.huynhliem.dto.response.UserResponse;
+import com.huynhliem.exception.ResourceNotFoundException;
 import com.huynhliem.model.Role;
 import com.huynhliem.model.User;
 import com.huynhliem.repository.RoleRepository;
@@ -79,14 +80,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
         return toUserResponse(user);
     }
 
     @Override
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
         return toUserResponse(user);
     }
 

@@ -2,7 +2,9 @@ package com.huynhliem.controller;
 
 import com.huynhliem.dto.request.UserCreationRequest;
 import com.huynhliem.dto.response.BaseResponse;
+import com.huynhliem.dto.response.ResponseError;
 import com.huynhliem.dto.response.UserResponse;
+import com.huynhliem.exception.ErrorResponse;
 import com.huynhliem.service.UserService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,21 +29,24 @@ public class UserController {
                                                 @RequestParam(defaultValue = "0") int page,
                                                 @RequestParam(defaultValue = "20") int size){
         List<UserResponse> userResponses=userService.findAll();
-    return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<List<UserResponse>>builder()
-            .code(HttpStatus.OK.value())
-            .message("Users retrieved successfully")
-            .data(userResponses)
-            .build());
-
+               return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<List<UserResponse>>builder()
+                       .code(HttpStatus.OK.value())
+                       .message("Users successfully")
+                       .data(userResponses)
+                       .build());
     }
     @GetMapping("/{id}")
     ResponseEntity<?> getUserById(@PathVariable @Min(1) Long id) {
         UserResponse userResponse = userService.getUserById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<UserResponse>builder()
-                .code(HttpStatus.OK.value())
-                .message("User retrieved successfully")
-                .data(userResponse)
-                .build());
+
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<UserResponse>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("User retrieved successfully")
+                    .data(userResponse)
+                    .build());
+
+
+
     }
     @PostMapping()
     ResponseEntity<?> createUser(@RequestBody UserCreationRequest req){
