@@ -3,12 +3,13 @@ package com.huynhliem.service;
 import com.huynhliem.dto.request.UserChangePasswordRequest;
 import com.huynhliem.dto.request.UserCreationRequest;
 import com.huynhliem.dto.response.UserResponse;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import com.huynhliem.model.User;
 
 import java.util.List;
 
 public interface UserService {
     UserResponse save(UserCreationRequest req);
+    User savePassword(User user);
     void update(UserCreationRequest req);
     void delete(Long id);
     void changePassword(UserChangePasswordRequest req);

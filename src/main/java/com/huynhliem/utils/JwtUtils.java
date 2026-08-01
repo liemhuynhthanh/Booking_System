@@ -26,6 +26,8 @@ public class JwtUtils {
     private String secretKey;
     @Value("${jwt.refreshSecretKey}")
     private String refreshSecretKey;
+    @Value("${jwt.resetSecretKey}")
+    private String resetKey;
 
     /**
      * Sinh access token từ UserDetails.
@@ -51,6 +53,16 @@ public class JwtUtils {
                 .signWith(getKey(TokenType.REFRESH_TOKEN), SignatureAlgorithm.HS256)
                 .compact();
     }
+    public String generateResetToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60)) // Reset token expires in 1 hour
+                .signWith(getKey(TokenType.RESET_TOKEN), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     /**
      * Lấy signing key từ Base64-encoded secret.
@@ -59,7 +71,11 @@ public class JwtUtils {
         byte[] keyBytes;
         if (tokenType.equals(TokenType.ACCESS_TOKEN)) {
             keyBytes = Decoders.BASE64.decode(secretKey);
-        } else {
+        }
+        else if (tokenType.equals(TokenType.RESET_TOKEN)) {
+            keyBytes = Decoders.BASE64.decode(resetKey);
+        }
+        else {
             // Handle refresh token key if different
             keyBytes = Decoders.BASE64.decode(refreshSecretKey);
         }

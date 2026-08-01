@@ -1,5 +1,6 @@
 package com.huynhliem.service.impl;
 
+import com.huynhliem.dto.request.PasswordResetDTO;
 import com.huynhliem.dto.request.UserLoginRequest;
 import com.huynhliem.dto.response.TokenResponse;
 import com.huynhliem.exception.TokenExpiredException;
@@ -8,6 +9,7 @@ import com.huynhliem.model.User;
 import com.huynhliem.repository.UserRepository;
 import com.huynhliem.service.AuthenticationService;
 import com.huynhliem.service.TokenService;
+import com.huynhliem.service.UserService;
 import com.huynhliem.utils.JwtUtils;
 import com.huynhliem.utils.TokenType;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -22,6 +24,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +37,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDetailService userDetailService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Override
     public TokenResponse authenticate(UserLoginRequest request) {
@@ -113,5 +118,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     tokenService.delete(currentToken);
 
         return "Logged out successfully";
+    }
+
+    @Override
+    public String forgotPassword(String email) {
+        //check mail
+        User user= userRepository.findUserByEmail(email).orElseThrow(()->new IllegalArgumentException("Email not found"));
+
+        UserDetails userDetails = userDetailService.loadUserByUsername(user.getName());
+        String resetToken = jwtUtils.generateResetToken(userDetails);
+        String confirm=String.format("curl --location --request POST 'http://localhost:8080/auth/reset-password' \\\n" +
+                "--data '%s'",resetToken);
+        log.info("Reset password command for user {}: {}", user.getName(), confirm);
+        return "Change password successfully";
+    }
+
+    @Override
+    public String resetPassword(String secretKey) {
+        final String username= jwtUtils.extractUsername(secretKey,TokenType.RESET_TOKEN);
+        User user= userRepository.findUserByName(username).orElseThrow(()->new IllegalArgumentException("User not found"));
+        if(!jwtUtils.isTokenValid(secretKey,TokenType.RESET_TOKEN)){
+            throw new IllegalArgumentException("Token is invalid");
+        }
+        return "Password reset successfully";
+    }
+
+    @Override
+    public String changePassword(PasswordResetDTO passwordResetDTO) {
+        final String username= jwtUtils.extractUsername(passwordResetDTO.getSecretKey(),TokenType.RESET_TOKEN);
+        var user=userRepository.findUserByName(username).orElseThrow(()->new IllegalArgumentException("User not found"));
+        if(!passwordResetDTO.getPassword().equals(passwordResetDTO.getConfirmPassword())){
+            throw new IllegalArgumentException("Password and confirm password do not match");
+        }
+        user.setPassword(passwordEncoder.encode(passwordResetDTO.getConfirmPassword()));
+        userService.savePassword(user);
+
+
+        return "";
     }
 }

@@ -2,6 +2,7 @@ package com.huynhliem.service.impl;
 
 import com.huynhliem.model.User;
 import com.huynhliem.repository.UserRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(@NonNull String username) {
         Optional<User> user=userRepository.findUserByName(username);
         if (user.isPresent()) {
             var userObj=user.get();

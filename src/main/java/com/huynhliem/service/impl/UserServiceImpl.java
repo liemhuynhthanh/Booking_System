@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User savePassword(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
     public void update(UserCreationRequest req) {
         // TODO: implement update
     }
