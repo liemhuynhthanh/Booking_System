@@ -8,6 +8,7 @@ import com.huynhliem.dto.response.TokenResponse;
 import com.huynhliem.dto.response.UserResponse;
 import com.huynhliem.service.AuthenticationService;
 import com.huynhliem.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,7 @@ public class AuthenticationController {
      * POST /auth/login
      * Đăng nhập, trả về access token + refresh token.
      */
+    @Operation(summary = "User login", description = "Authenticate user and return access token and refresh token")
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody UserLoginRequest request) {
         TokenResponse tokenResponse = authenticationService.authenticate(request);
