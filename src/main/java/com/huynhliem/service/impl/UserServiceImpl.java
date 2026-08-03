@@ -1,6 +1,5 @@
 package com.huynhliem.service.impl;
 
-import com.huynhliem.dto.request.UserChangePasswordRequest;
 import com.huynhliem.dto.request.UserCreationRequest;
 import com.huynhliem.dto.response.UserResponse;
 import com.huynhliem.exception.ResourceNotFoundException;
@@ -15,10 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -72,10 +72,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public void changePassword(UserChangePasswordRequest req) {
-        // TODO: implement changePassword
-    }
 
     @Override
     public UserResponse getUserById(Long id) {
@@ -94,14 +90,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserByName(String name) {
         User user = userRepository.findUserByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with name: " + name));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with name: " + name));
         return toUserResponse(user);
     }
 
+
     @Override
-    public List<UserResponse> findAll() {
-        return userRepository.findAll().stream().map(this::toUserResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> findAll(String keyword, Pageable pageable) {
+        return userRepository.searchUsers(keyword, pageable)
+                .map(this::toUserResponse);
     }
 
     private UserResponse toUserResponse(User user) {

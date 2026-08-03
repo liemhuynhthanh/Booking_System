@@ -35,8 +35,11 @@ public class AppConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated())
+                        auth -> auth
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/user/**").hasRole("USER")
+                                .anyRequest().authenticated()
+                                )
                 .sessionManagement(manager->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
@@ -47,7 +50,6 @@ public class AppConfig {
     WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers( "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml", "/v3/api-docs.yml", "/h2-console/**");
     }
-    // config spring web confuger
 
     @Bean
     PasswordEncoder passwordEncoder(){
