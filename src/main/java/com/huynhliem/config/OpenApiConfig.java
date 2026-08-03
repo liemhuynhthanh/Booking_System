@@ -24,14 +24,14 @@ public class OpenApiConfig {
                                                 .title("Booking System API")
                                                 .version("1.0.0")
                                                 .description("""
-                                                                ## Booking System — REST API Documentation
+                                                                ## Booking System - REST API Documentation
 
-                                                                Hệ thống đặt lịch với xác thực JWT.
+                                                                Hệ thống đặt vé với xác thực JWT.
 
                                                                 ### Cách sử dụng
-                                                                1. Đăng ký tài khoản qua `POST /auth/signup`
-                                                                2. Đăng nhập qua `POST /auth/login` → nhận `accessToken`
-                                                                3. Click **Authorize** → nhập `accessToken` vào ô Bearer
+                                                                1. Đăng ký tài khoản qua POST /auth/signup
+                                                                2. Đăng nhập qua POST /auth/login → nhận accessToken
+                                                                3. Click **Authorize** → nhập accessToken vào ô Bearer
                                                                 4. Gọi các API yêu cầu xác thực
 
                                                                 ### Response format
@@ -86,6 +86,22 @@ public class OpenApiConfig {
                 return GroupedOpenApi.builder()
                                 .group("User Management")
                                 .pathsToMatch("/user/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi concertApi() {
+                return GroupedOpenApi.builder()
+                                .group("Concert")
+                                .pathsToMatch("/concert/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi ticketTypeApi() {
+                return GroupedOpenApi.builder()
+                                .group("Ticket Type")
+                                .pathsToMatch("/ticket-type/**")
                                 .build();
         }
 }
