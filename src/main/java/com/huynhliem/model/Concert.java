@@ -44,8 +44,6 @@ public class Concert {
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Instant createdAt;
-
-    // ── Relations ──────────────────────────────────
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<TicketType> ticketTypes = new ArrayList<>();

@@ -41,6 +41,7 @@ public class AppConfig {
                                 .requestMatchers("/user/**").hasRole("USER")
                                 .requestMatchers("/concert/**").hasRole("USER")
                                 .requestMatchers("/ticket-type/**").hasRole("USER")
+                                .requestMatchers("/booking/**").hasRole("USER")
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

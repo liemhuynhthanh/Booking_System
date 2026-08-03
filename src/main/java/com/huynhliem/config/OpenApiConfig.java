@@ -104,4 +104,12 @@ public class OpenApiConfig {
                                 .pathsToMatch("/ticket-type/**")
                                 .build();
         }
+
+        @Bean
+        public GroupedOpenApi bookingApi() {
+                return GroupedOpenApi.builder()
+                                .group("Booking")
+                                .pathsToMatch("/booking/**")
+                                .build();
+        }
 }
