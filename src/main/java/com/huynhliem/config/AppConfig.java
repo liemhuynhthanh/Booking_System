@@ -38,10 +38,11 @@ public class AppConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/user/**").hasRole("USER")
-                                .requestMatchers("/concert/**").hasRole("USER")
-                                .requestMatchers("/ticket-type/**").hasRole("USER")
-                                .requestMatchers("/booking/**").hasRole("USER")
+                                .requestMatchers("/booking/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/concert/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/voucher/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/user/**", "/concert/**", "/ticket-type/**", "/booking/**")
+                                .hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

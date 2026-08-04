@@ -29,10 +29,6 @@ public class TicketType {
 
     @Column(name = "remaining_quantity", nullable = false)
     private Integer remainingQuantity;
-    @Version
-    @Column(nullable = false)
-    @Builder.Default
-    private Integer version = 0;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "concert_id", nullable = false)
     private Concert concert;

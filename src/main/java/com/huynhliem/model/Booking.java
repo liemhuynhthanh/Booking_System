@@ -30,6 +30,9 @@ public class Booking {
         @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
         private BigDecimal totalAmount;
 
+        @Column(name = "discount_amount", precision = 10, scale = 2)
+        private BigDecimal discountAmount;
+
         /**
          * Trạng thái đơn đặt: PENDING, PAID, CANCELLED, FAILED, EXPIRED
          */
