@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findUserByEmail(req.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists: " + req.getEmail());
         }
-        // Gán role USER mặc định
+        
         Role userRole = roleRepository.findByRoleName("USER")
                 .orElseGet(() -> {
                     return roleRepository.save(Role.builder().roleName("USER").build());
@@ -64,14 +64,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(UserCreationRequest req) {
-        // TODO: implement update
+        
     }
 
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
-
 
     @Override
     public UserResponse getUserById(Long id) {
@@ -93,7 +92,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with name: " + name));
         return toUserResponse(user);
     }
-
 
     @Override
     public Page<UserResponse> findAll(String keyword, Pageable pageable) {

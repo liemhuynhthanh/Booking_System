@@ -18,33 +18,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/ticket-types")
 @RequiredArgsConstructor
-@Tag(name = "Ticket Type", description = "API cho hạng vé")
+@Tag(name = "Ticket Types", description = "API cho hạng vé")
 public class TicketTypeController {
 
-    private final TicketTypeService ticketTypeService;
+  private final TicketTypeService ticketTypeService;
 
-    @Operation(summary = "Danh sách hạng vé", description = "Lấy danh sách các hạng vé và giá vé theo ID của buổi ca nhạc")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Thành công", content = @Content(examples = @ExampleObject(value = """
-                    {
-                      "code": 200,
-                      "message": "Ticket types retrieved successfully",
-                      "data": [
-                        { "id": 1, "name": "VIP", "price": 2000000, "totalQuantity": 100, "remainingQuantity": 100, "concertId": 1 },
-                        { "id": 2, "name": "Standard", "price": 500000, "totalQuantity": 500, "remainingQuantity": 500, "concertId": 1 }
-                      ],
-                      "timestamp": "2026-08-03T15:00:00Z"
-                    }""")))
-    })
-    @GetMapping("/concert/{concertId}")
-    public ResponseEntity<BaseResponse<List<TicketTypeResponse>>> getTicketTypesByConcert(@PathVariable Long concertId) {
-        List<TicketTypeResponse> data = ticketTypeService.getTicketTypesByConcertId(concertId);
-        
-        return ResponseEntity.ok(
-                BaseResponse.<List<TicketTypeResponse>>builder()
-                        .code(200)
-                        .message("Ticket types retrieved successfully")
-                        .data(data)
-                        .build());
-    }
+  @Operation(summary = "Get Ticket Types By Concert ID (Public)", description = "Lấy danh sách các hạng vé và giá vé theo ID của buổi ca nhạc")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Thành công", content = @Content(examples = @ExampleObject(value = """
+          {
+            "code": 200,
+            "message": "Ticket types retrieved successfully",
+            "data": [
+              { "id": 1, "name": "VIP", "price": 2000000, "totalQuantity": 100, "remainingQuantity": 100, "concertId": 1 },
+              { "id": 2, "name": "Standard", "price": 500000, "totalQuantity": 500, "remainingQuantity": 500, "concertId": 1 }
+            ],
+            "timestamp": "2026-08-03T15:00:00Z"
+          }""")))
+  })
+  @GetMapping("/concert/{concertId}")
+  public ResponseEntity<BaseResponse<List<TicketTypeResponse>>> getTicketTypesByConcert(@PathVariable Long concertId) {
+    List<TicketTypeResponse> data = ticketTypeService.getTicketTypesByConcertId(concertId);
+
+    return ResponseEntity.ok(
+        BaseResponse.<List<TicketTypeResponse>>builder()
+            .code(200)
+            .message("Ticket types retrieved successfully")
+            .data(data)
+            .build());
+  }
 }

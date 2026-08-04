@@ -20,12 +20,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/vouchers")
 @RequiredArgsConstructor
-@Tag(name = "Voucher", description = "API quản lý chiến dịch mã giảm giá (Admin)")
+@Tag(name = "Vouchers", description = "API quản lý chiến dịch mã giảm giá (Admin)")
 public class VoucherController {
 
         private final VoucherService voucherService;
 
-        @Operation(summary = "Tạo mới Voucher (Admin)", description = "Tạo chiến dịch mã giảm giá mới. Yêu cầu quyền Admin.")
+        @Operation(summary = "Create Voucher (Admin)", description = "Tạo chiến dịch mã giảm giá mới. Yêu cầu quyền Admin.")
         @PostMapping("/admin/create")
         public ResponseEntity<BaseResponse<VoucherResponse>> createVoucher(@Valid @RequestBody VoucherRequest request) {
                 VoucherResponse response = voucherService.createVoucher(request);
@@ -37,7 +37,7 @@ public class VoucherController {
                                                 .build());
         }
 
-        @Operation(summary = "Danh sách Voucher (Admin)", description = "Lấy danh sách tất cả các mã giảm giá có phân trang. Yêu cầu quyền Admin.")
+        @Operation(summary = "Get All Vouchers (Admin)", description = "Lấy danh sách tất cả các mã giảm giá có phân trang. Yêu cầu quyền Admin.")
         @GetMapping("/admin/list")
         public ResponseEntity<BaseResponse<List<VoucherResponse>>> getAllVouchers(
                         @RequestParam(defaultValue = "0") int page,

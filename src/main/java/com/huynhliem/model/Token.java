@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,22 +19,18 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
+    @Column(name = "token", length = 512, nullable = false, unique = true)
+    private String token;
 
-    @Column(name = "access_token")
-    private String accessToken;
+    @Column(name = "expired_at", nullable = false)
+    private LocalDateTime expiredAt;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDate createdAt;
+    @Column(name = "revoked", nullable = false)
+    private boolean revoked = false;
 
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private LocalDate updatedAt;
-
-
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
+    private LocalDateTime createdAt;
 }

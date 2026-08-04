@@ -32,12 +32,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bookings")
 @RequiredArgsConstructor
-@Tag(name = "Booking", description = "API đặt vé và quản lý đơn hàng")
+@Tag(name = "Bookings", description = "API đặt vé và quản lý đơn hàng")
 public class BookingController {
 
   private final BookingService bookingService;
 
-  @Operation(summary = "Đặt giữ vé", description = "Đặt giữ vé cho một buổi ca nhạc (có hỗ trợ Optimistic Locking). Yêu cầu Bearer Token.")
+  @Operation(summary = "Reserve Tickets", description = "Đặt giữ vé cho một buổi ca nhạc (có hỗ trợ Optimistic Locking). Yêu cầu Bearer Token.")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Đặt giữ vé thành công", content = @Content(examples = @ExampleObject(value = """
           {
@@ -82,7 +82,7 @@ public class BookingController {
             .build());
   }
 
-  @Operation(summary = "Lấy chi tiết đơn đặt vé", description = "Xem chi tiết một đơn đặt vé bằng ID của nó. Yêu cầu Bearer Token.")
+  @Operation(summary = "Get Booking by ID", description = "Xem chi tiết một đơn đặt vé bằng ID của nó. Yêu cầu Bearer Token.")
   @GetMapping("/{id}")
   public ResponseEntity<BaseResponse<BookingResponse>> getBookingById(@PathVariable Long id) {
     BookingResponse response = bookingService.getBookingById(id);
@@ -94,7 +94,7 @@ public class BookingController {
             .build());
   }
 
-  @Operation(summary = "Lấy danh sách đơn đặt vé của tôi", description = "Xem lịch sử đặt vé của user hiện tại. Yêu cầu Bearer Token.")
+  @Operation(summary = "Get My Bookings History", description = "Xem lịch sử đặt vé của user hiện tại. Yêu cầu Bearer Token.")
   @GetMapping("/history")
   public ResponseEntity<BaseResponse<List<BookingResponse>>> getMyBookings() {
     List<BookingResponse> response = bookingService.getMyBookings();
@@ -106,7 +106,7 @@ public class BookingController {
             .build());
   }
 
-  @Operation(summary = "Giám sát đặt vé (Admin)", description = "Lấy danh sách tất cả các đơn đặt vé. Phân trang. Yêu cầu tài khoản có quyền Admin.")
+  @Operation(summary = "Get All Bookings (Admin)", description = "Lấy danh sách tất cả các đơn đặt vé. Phân trang. Yêu cầu tài khoản có quyền Admin.")
   @GetMapping("/admin/all")
   public ResponseEntity<BaseResponse<List<BookingResponse>>> getAllBookingsForAdmin(
       @RequestParam(defaultValue = "0") int page,
@@ -125,7 +125,7 @@ public class BookingController {
             .build());
   }
 
-  @Operation(summary = "Cập nhật trạng thái vé (Admin)", description = "Chuyển trạng thái vé (ví dụ: PAID, CANCELLED). Yêu cầu quyền Admin.")
+  @Operation(summary = "Update Booking Status (Admin)", description = "Chuyển trạng thái vé (ví dụ: PAID, CANCELLED). Yêu cầu quyền Admin.")
   @PutMapping("/admin/{id}/status")
   public ResponseEntity<BaseResponse<BookingResponse>> updateBookingStatus(
       @PathVariable Long id,

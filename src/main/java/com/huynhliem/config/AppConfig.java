@@ -30,7 +30,6 @@ public class AppConfig {
     private final UserDetailService userDetailsService;
     private final PreFilter filter;
 
-    // Create spring web security
     @Bean
     SecurityFilterChain securityFilterChain(@NonNull HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)

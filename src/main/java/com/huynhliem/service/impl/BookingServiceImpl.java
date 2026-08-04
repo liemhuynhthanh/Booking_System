@@ -38,19 +38,17 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse reserveTickets(BookingRequest request) {
-        // 1. Kiểm tra Idempotency Key (chống duplicate request)
+        
         Optional<Booking> existingBooking = bookingRepository.findByIdempotencyKey(request.getIdempotencyKey());
         if (existingBooking.isPresent()) {
             log.info("Idempotency key {} already processed, returning existing booking.", request.getIdempotencyKey());
             return mapToResponse(existingBooking.get());
         }
 
-        // 2. Lấy thông tin User hiện tại
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByName(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
 
-        // 3. Kiểm tra Concert
         Concert concert = concertRepository.findById(request.getConcertId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Concert not found with id: " + request.getConcertId()));
@@ -59,8 +57,6 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidRequestException("Cannot book tickets for a concert that is " + concert.getStatus());
         }
 
-        // --- BẮT ĐẦU: CHỐNG ÔM VÉ (ANTI-SCALPING) ---
-        // 1. Kiểm tra số lượng vé tối đa mỗi đơn (Max 4 vé/đơn)
         int totalQuantityRequested = request.getItems().stream()
                 .mapToInt(BookingItemRequest::getQuantity)
                 .sum();
@@ -68,14 +64,11 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidRequestException("Bạn chỉ được phép mua tối đa 4 vé cho mỗi đơn hàng.");
         }
 
-        // 2. Kiểm tra số đơn hàng PENDING tối đa của User (Max 2 đơn PENDING)
         long pendingOrdersCount = bookingRepository.countByUserIdAndStatus(user.getId(), "PENDING");
         if (pendingOrdersCount >= 2) {
             throw new InvalidRequestException("Bạn đang có quá nhiều đơn hàng chưa thanh toán. Vui lòng thanh toán hoặc hủy đơn cũ trước khi đặt tiếp.");
         }
-        // --- KẾT THÚC: CHỐNG ÔM VÉ ---
 
-        // 4. Xử lý từng BookingItem
         BigDecimal totalAmount = BigDecimal.ZERO;
         List<BookingItem> bookingItemsToSave = new ArrayList<>();
 
@@ -93,7 +86,6 @@ public class BookingServiceImpl implements BookingService {
                 throw new InvalidRequestException("Not enough tickets available for type: " + ticketType.getName());
             }
 
-            // Trừ số lượng an toàn bằng câu lệnh DB trực tiếp
             int updatedRows = ticketTypeRepository.decrementTicketQuantity(ticketType.getId(), itemReq.getQuantity());
             if (updatedRows == 0) {
                 throw new InvalidRequestException(
@@ -105,13 +97,12 @@ public class BookingServiceImpl implements BookingService {
 
             BookingItem bookingItem = BookingItem.builder()
                     .quantity(itemReq.getQuantity())
-                    .price(ticketType.getPrice()) // Lưu lại giá tại thời điểm đặt
+                    .price(ticketType.getPrice()) 
                     .ticketType(ticketType)
                     .build();
             bookingItemsToSave.add(bookingItem);
         }
 
-        // 5. Xử lý Voucher (nếu có)
         Voucher voucher = null;
         BigDecimal discountAmount = BigDecimal.ZERO;
         if (request.getVoucherCode() != null && !request.getVoucherCode().trim().isEmpty()) {
@@ -132,34 +123,30 @@ public class BookingServiceImpl implements BookingService {
                 discountAmount = voucher.getDiscountValue();
             }
 
-            // Giới hạn giảm giá không vượt quá tổng tiền
             if (discountAmount.compareTo(totalAmount) > 0) {
                 discountAmount = totalAmount;
             }
 
             totalAmount = totalAmount.subtract(discountAmount);
 
-            // Tăng số lượt sử dụng voucher
             voucher.setUsedCount(voucher.getUsedCount() + 1);
             voucherRepository.save(voucher);
         }
 
-        // 6. Tạo và lưu Booking
         Booking booking = Booking.builder()
                 .user(user)
                 .concert(concert)
                 .voucher(voucher)
                 .totalAmount(totalAmount)
                 .discountAmount(discountAmount)
-                .status("PENDING") // Chờ thanh toán
+                .status("PENDING") 
                 .idempotencyKey(request.getIdempotencyKey())
-                .expiresAt(LocalDateTime.now().plusMinutes(15)) // Giữ vé 15 phút
+                .expiresAt(LocalDateTime.now().plusMinutes(15)) 
                 .bookingItems(new ArrayList<>())
                 .build();
 
         Booking savedBooking = bookingRepository.save(booking);
 
-        // 7. Gắn Booking vào từng BookingItem và lưu
         for (BookingItem item : bookingItemsToSave) {
             item.setBooking(savedBooking);
             savedBooking.getBookingItems().add(item);
@@ -231,24 +218,21 @@ public class BookingServiceImpl implements BookingService {
         if (currentStatus.equals(newStatus)) {
             return mapToResponse(booking);
         }
-        // Trạng thái đã Hủy hoặc Hết hạn thì KHÔNG thể khôi phục
+        
         if ("CANCELLED".equals(currentStatus) || "EXPIRED".equals(currentStatus)) {
             throw new InvalidRequestException(
                     "Cannot change status of a cancelled or expired booking. Please create a new one.");
         }
 
-        // Nếu chuyển từ trạng thái đang giữ vé (PENDING/PAID) sang Hủy
-        // (CANCELLED/EXPIRED)
         boolean wasActive = "PENDING".equals(currentStatus) || "PAID".equals(currentStatus);
         boolean isNowCancelled = "CANCELLED".equals(newStatus) || "EXPIRED".equals(newStatus);
 
         if (wasActive && isNowCancelled) {
-            // Hoàn lại vé
+            
             for (BookingItem item : booking.getBookingItems()) {
                 ticketTypeRepository.incrementTicketQuantity(item.getTicketType().getId(), item.getQuantity());
             }
 
-            // Hoàn lại lượt dùng voucher
             if (booking.getVoucher() != null) {
                 Voucher voucher = booking.getVoucher();
                 voucher.setUsedCount(voucher.getUsedCount() - 1);
@@ -296,7 +280,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 60000) // Run every 1 minute
+    @Scheduled(fixedRate = 60000) 
     public void cancelExpiredBookings() {
         LocalDateTime now = LocalDateTime.now();
         List<Booking> expiredBookings = bookingRepository.findByStatusAndExpiresAtBefore("PENDING", now);
@@ -305,15 +289,13 @@ public class BookingServiceImpl implements BookingService {
             log.info("Found {} expired pending bookings to cancel.", expiredBookings.size());
         }
         for (Booking booking : expiredBookings) {
-            // 1. Change status
+            
             booking.setStatus("EXPIRED");
 
-            // 2. Return ticket quantities
             for (BookingItem item : booking.getBookingItems()) {
                 ticketTypeRepository.incrementTicketQuantity(item.getTicketType().getId(), item.getQuantity());
             }
 
-            // 3. Return voucher usage if a voucher was applied
             if (booking.getVoucher() != null) {
                 Voucher voucher = booking.getVoucher();
                 voucher.setUsedCount(voucher.getUsedCount() - 1);

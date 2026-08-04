@@ -34,9 +34,6 @@ public class Concert {
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    /**
-     * Trạng thái concert: UPCOMING, ONGOING, ENDED, CANCELLED
-     */
     @Column(nullable = false, length = 50)
     @Builder.Default
     private String status = "UPCOMING";

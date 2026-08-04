@@ -27,30 +27,19 @@ public class Booking {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
+
         @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
         private BigDecimal totalAmount;
 
         @Column(name = "discount_amount", precision = 10, scale = 2)
         private BigDecimal discountAmount;
 
-        /**
-         * Trạng thái đơn đặt: PENDING, PAID, CANCELLED, FAILED, EXPIRED
-         */
         @Column(nullable = false, length = 50)
         private String status;
 
-        /**
-         * Khóa chống trùng lặp request từ client (Idempotency Key).
-         * Client tự sinh UUID gửi lên, server kiểm tra nếu đã tồn tại → trả về kết quả
-         * cũ.
-         */
         @Column(name = "idempotency_key", unique = true, length = 100)
         private String idempotencyKey;
 
-        /**
-         * Thời điểm đơn hết hạn giữ vé (TTL).
-         * Scheduler sẽ tự động chuyển đơn PENDING → EXPIRED nếu quá thời gian này.
-         */
         @Column(name = "expires_at", nullable = false)
         private LocalDateTime expiresAt;
 

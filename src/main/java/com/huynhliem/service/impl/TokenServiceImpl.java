@@ -17,19 +17,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Long save(Token token) {
-       java.util.Optional<Token> existingToken = tokenRepository.findTokenByUsername(token.getUsername());
-        if (existingToken.isPresent()) {
-            Token currentToken= existingToken.get();
-            currentToken.setAccessToken(token.getAccessToken());
-            currentToken.setRefreshToken(token.getRefreshToken());
-            return currentToken.getId();
-        }
-        else {
-            tokenRepository.save(token);
-            return token.getId();
-        }
-
-
+        tokenRepository.save(token);
+        return token.getId();
     }
 
     @Override
@@ -39,11 +28,18 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Token getByUserName(String username) {
-        try {
-            return tokenRepository.findTokenByUsername(username).orElseThrow(()->new NameNotFoundException("Token not found"));
-        } catch (NameNotFoundException e) {
-            throw new RuntimeException(e);
+    public Token getByToken(String token) {
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Token not found"));
+    }
+
+    @Override
+    public void revokeAllTokensForUser(Long userId) {
+        java.util.List<Token> validTokens = tokenRepository.findAllByUserIdAndRevokedFalse(userId);
+        if (validTokens.isEmpty()) {
+            return;
         }
+        validTokens.forEach(token -> token.setRevoked(true));
+        tokenRepository.saveAll(validTokens);
     }
 }

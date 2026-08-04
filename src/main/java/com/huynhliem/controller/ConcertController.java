@@ -28,12 +28,12 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/concerts")
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "Concert", description = "API cho buổi ca nhạc")
+@Tag(name = "Concerts", description = "API cho buổi ca nhạc")
 public class ConcertController {
 
         private final ConcertService concertService;
 
-        @Operation(summary = "Tạo mới buổi ca nhạc (Admin)", description = "Tạo buổi ca nhạc mới và phát hành vé cùng lúc. Yêu cầu quyền Admin.")
+        @Operation(summary = "Create Concert (Admin)", description = "Tạo buổi ca nhạc mới và phát hành vé cùng lúc. Yêu cầu quyền Admin.")
         @PostMapping("/admin/create")
         public ResponseEntity<BaseResponse<ConcertResponse>> createConcert(@Valid @RequestBody ConcertRequest request) {
                 ConcertResponse response = concertService.createConcert(request);
@@ -45,7 +45,7 @@ public class ConcertController {
                                                 .build());
         }
 
-        @Operation(summary = "Thống kê vé còn lại (Admin)", description = "Lấy tổng quan số lượng vé tổng, đã bán, còn trống của một buổi diễn.")
+        @Operation(summary = "Get Concert Availability (Admin)", description = "Lấy tổng quan số lượng vé tổng, đã bán, còn trống của một buổi diễn.")
         @GetMapping("/admin/{id}/availability")
         public ResponseEntity<BaseResponse<ConcertAvailabilityResponse>> getConcertAvailability(@PathVariable Long id) {
                 ConcertAvailabilityResponse response = concertService.getConcertAvailability(id);
@@ -57,7 +57,7 @@ public class ConcertController {
                                                 .build());
         }
 
-        @Operation(summary = "Danh sách buổi ca nhạc", description = """
+        @Operation(summary = "Get All Concerts (Public)", description = """
                         Lấy danh sách buổi ca nhạc có phân trang, tìm kiếm theo tên và trạng thái.
 
                         **Tham số:**

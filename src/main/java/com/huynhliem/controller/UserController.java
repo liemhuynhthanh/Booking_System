@@ -29,12 +29,12 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "User", description = "API quản lý thông tin người dùng")
+@Tag(name = "Users", description = "API quản lý thông tin người dùng")
 public class UserController {
 
   private final UserService userService;
 
-  @Operation(summary = "Danh sách user", description = """
+  @Operation(summary = "Get All Users (Admin)", description = """
       Lấy danh sách user có phân trang và tìm kiếm theo name/email.
 
       **Tham số phân trang:**
@@ -79,7 +79,7 @@ public class UserController {
             .build());
   }
 
-  @Operation(summary = "Chi tiết user", description = "Lấy thông tin chi tiết của một user theo ID.")
+  @Operation(summary = "Get User by ID", description = "Lấy thông tin chi tiết của một user theo ID.")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Lấy thông tin thành công", content = @Content(examples = @ExampleObject(value = """
           {
@@ -106,10 +106,7 @@ public class UserController {
             .build());
   }
 
-  /**
-   * Tạo user mới.
-   */
-  @Operation(summary = "Tạo user", description = "Tạo một user mới.")
+  @Operation(summary = "Create User (Admin)", description = "Tạo một user mới.")
   @ApiResponses({
       @ApiResponse(responseCode = "201", description = "Tạo user thành công", content = @Content(examples = @ExampleObject(value = """
           {
