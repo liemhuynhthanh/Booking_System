@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/booking")
+@RequestMapping("/api/v1/bookings")
 @RequiredArgsConstructor
-@Tag(name = "Booking", description = "API đặt giữ vé")
+@Tag(name = "Booking", description = "API đặt vé và quản lý đơn hàng")
 public class BookingController {
 
   private final BookingService bookingService;

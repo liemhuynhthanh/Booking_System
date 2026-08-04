@@ -26,8 +26,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@Tag(name = "Authentication", description = "API cho đăng nhập, đăng ký và quên mật khẩu")
 public class AuthenticationController {
 
         private final AuthenticationService authenticationService;

@@ -26,9 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/users")
 @Slf4j
 @RequiredArgsConstructor
+@Tag(name = "User", description = "API quản lý thông tin người dùng")
 public class UserController {
 
   private final UserService userService;

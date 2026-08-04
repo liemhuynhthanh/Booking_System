@@ -25,9 +25,10 @@ import com.huynhliem.dto.request.ConcertRequest;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/concert")
+@RequestMapping("/api/v1/concerts")
 @Slf4j
 @RequiredArgsConstructor
+@Tag(name = "Concert", description = "API cho buổi ca nhạc")
 public class ConcertController {
 
         private final ConcertService concertService;

@@ -77,7 +77,7 @@ public class OpenApiConfig {
         public GroupedOpenApi authApi() {
                 return GroupedOpenApi.builder()
                                 .group("Authentication")
-                                .pathsToMatch("/auth/**")
+                                .pathsToMatch("/api/v1/auth/**")
                                 .build();
         }
 
@@ -85,7 +85,7 @@ public class OpenApiConfig {
         public GroupedOpenApi userApi() {
                 return GroupedOpenApi.builder()
                                 .group("User Management")
-                                .pathsToMatch("/user/**")
+                                .pathsToMatch("/api/v1/users/**")
                                 .build();
         }
 
@@ -93,7 +93,7 @@ public class OpenApiConfig {
         public GroupedOpenApi concertApi() {
                 return GroupedOpenApi.builder()
                                 .group("Concert")
-                                .pathsToMatch("/concert/**")
+                                .pathsToMatch("/api/v1/concerts/**")
                                 .build();
         }
 
@@ -101,7 +101,7 @@ public class OpenApiConfig {
         public GroupedOpenApi ticketTypeApi() {
                 return GroupedOpenApi.builder()
                                 .group("Ticket Type")
-                                .pathsToMatch("/ticket-type/**")
+                                .pathsToMatch("/api/v1/ticket-types/**")
                                 .build();
         }
 
@@ -109,7 +109,15 @@ public class OpenApiConfig {
         public GroupedOpenApi bookingApi() {
                 return GroupedOpenApi.builder()
                                 .group("Booking")
-                                .pathsToMatch("/booking/**")
+                                .pathsToMatch("/api/v1/bookings/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi voucherApi() {
+                return GroupedOpenApi.builder()
+                                .group("Voucher")
+                                .pathsToMatch("/api/v1/vouchers/**")
                                 .build();
         }
 }

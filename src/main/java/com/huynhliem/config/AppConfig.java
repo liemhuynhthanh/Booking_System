@@ -37,11 +37,11 @@ public class AppConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/booking/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/concert/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/voucher/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**", "/concert/**", "/ticket-type/**", "/booking/**")
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/bookings/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/concerts/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/vouchers/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/users/**", "/api/v1/concerts/**", "/api/v1/ticket-types/**", "/api/v1/bookings/**")
                                 .hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
