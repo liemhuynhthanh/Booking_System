@@ -53,7 +53,7 @@ public class AppConfig {
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
-                "/v3/api-docs.yaml", "/v3/api-docs.yml", "/h2-console/**");
+                "/v3/api-docs.yaml", "/v3/api-docs.yml", "/h2-console/**", "/actuator/**");
     }
 
     @Bean

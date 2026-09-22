@@ -110,24 +110,16 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
 			<id>dev</id>
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<spring.profiles.active>prod</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>test</id>
-			<properties>
-				<spring.profiles.active>test</spring.profiles.active>
 			</properties>
 		</profile>
 	</profiles>
